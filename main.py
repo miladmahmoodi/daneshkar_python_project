@@ -88,7 +88,7 @@ def sign_in() -> None:
                 case '6':
                     tickets_list(profile)
                 case '7':
-                    subscription(profile)
+                    buy_subscription(profile)
                 case '8':
                     break
 
@@ -222,6 +222,21 @@ def wallet(profile: 'User'):
 
 def tickets_list(profile: 'User')-> list[str]:
     pass
+
+
+def buy_subscription(profile: 'User') -> 'User':
+    print('-- [0] Cancel [1] Bronze [2] Silver [3] Golden --')
+    choice = input('Your choice: ')
+
+    match choice:
+        case '0':
+            pass
+        case '1':
+            pass
+        case '2':
+            pass
+        case '3':
+            pass
 
 
 def main() -> None:
