@@ -59,8 +59,6 @@ pip install -r requirements.txt
 python main.py
 ```
 
-2. Follow the on-screen instructions to interact with the system.
-
 ## Testing
 
 To run the tests, execute the following command:
