@@ -86,7 +86,7 @@ def sign_in() -> None:
                 case '5':
                     wallet(profile)
                 case '6':
-                    tickets(profile)
+                    ticket_list(profile)
                 case '7':
                     subscription(profile)
                 case '8':
