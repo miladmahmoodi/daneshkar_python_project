@@ -206,6 +206,20 @@ def movies_list(profile: 'User') -> list[str]:
     pass
 
 
+def wallet():
+    print('-- wallet --')
+    print('-- [0] Cancel [1] Wallet balance [2] Recharge wallet --')
+    choice = input('Your choice: ')
+
+    match choice:
+        case '0':
+            pass
+        case '1':
+            pass
+        case '2':
+            pass
+
+
 def main() -> None:
     """
     Display the main menu.
