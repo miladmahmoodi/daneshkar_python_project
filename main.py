@@ -86,7 +86,7 @@ def sign_in() -> None:
                 case '5':
                     wallet(profile)
                 case '6':
-                    ticket_list(profile)
+                    tickets_list(profile)
                 case '7':
                     subscription(profile)
                 case '8':
@@ -218,6 +218,10 @@ def wallet(profile: 'User'):
             pass
         case '2':
             pass
+
+
+def tickets_list(profile: 'User')-> list[str]:
+    pass
 
 
 def main() -> None:
