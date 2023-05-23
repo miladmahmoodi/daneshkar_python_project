@@ -202,6 +202,10 @@ def update_phone_number(profile: 'User') -> 'User':
     return profile
 
 
+def movies_list(profile: 'User') -> list[str]:
+    pass
+
+
 def main() -> None:
     """
     Display the main menu.
