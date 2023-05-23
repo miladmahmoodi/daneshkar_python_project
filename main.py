@@ -44,6 +44,51 @@ def sign_up():
         print(Message.success_signup(username))
 
 
+def sign_in() -> None:
+    """
+    Display a form for user sign-in.
+
+    The function prompts the user to enter their username and password.
+    If the username and password are correct, the function displays a menu with options to view the user profile, edit
+    the user profile, change the user password, or logout.
+    If the username or password is incorrect, the function raises a ValueError.
+
+    :return: None.
+    """
+
+    print(Message.SIGNIN_TITLE_PROMPT)
+    username = input(Message.SIGNIN_USERNAME_INPUT_PROMPT)
+    password = getpass(Message.SIGNIN_PASSWORD_INPUT_PROMPT)
+
+    try:
+        profile = User.get_profile(username)
+        profile.sign_in(password)
+    except ExistsUserError as err:
+        print(err)
+    except SigninError as err:
+        print(err)
+    else:
+        print(Message.welcome_user_message(username))
+
+        while True:
+            print(Message.MENU_SIGNIN_PROMPT)
+            signin_inp = input(Message.MENU_SIGNIN_SELECTED_ITEM_PROMPT)
+
+            match signin_inp:
+                case '1':
+                    print(profile)
+                case '2':
+                    update_profile(profile)
+                case '3':
+                    update_password(profile)
+                case '4':
+                    manage_bank(profile)
+                case '5':
+                    wallet(profile)
+                case '6':
+                    break
+
+
 def main() -> None:
     """
     Display the main menu.
