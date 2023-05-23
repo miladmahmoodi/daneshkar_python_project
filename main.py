@@ -93,6 +93,28 @@ def sign_in() -> None:
                     break
 
 
+def update_profile(profile: User) -> None:
+    """
+    Update the user profile.
+
+    The function updates the user profile using the given 'profile' object.
+
+    :param profile: A User object representing the user profile to be updated.
+    :return: None.
+    """
+    while True:
+        print(Message.MENU_EDIT_PROFILE_PROMPT)
+        edit_inp = input(Message.MENU_EDIT_SELECTED_ITEM_INPUT_PROMPT)
+
+        match edit_inp:
+            case '0':
+                break
+            case '1':
+                update_username(profile)
+            case '2':
+                update_phone_number(profile)
+
+
 def main() -> None:
     """
     Display the main menu.
