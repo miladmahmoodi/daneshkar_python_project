@@ -82,10 +82,14 @@ def sign_in() -> None:
                 case '3':
                     update_password(profile)
                 case '4':
-                    manage_bank(profile)
+                    pass
                 case '5':
-                    wallet(profile)
+                    pass
                 case '6':
+                    pass
+                case '7':
+                    pass
+                case '8':
                     break
 
 
