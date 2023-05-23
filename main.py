@@ -147,6 +147,34 @@ def update_password(profile: User) -> None:
         print(Message.SUCCESS_PASSWORD_UPDATE_MESSAGE)
 
 
+def update_username(profile: 'User') -> 'User':
+    """
+    Update the user username.
+
+    The function updates the user username using the given 'profile' object.
+
+    :param profile: A User object representing the user profile to be updated.
+    :return: The instance of User.
+    """
+    print(Message.EDIT_USERNAME_TITLE_PROMPT)
+    new_username = input(Message.NEW_USERNAME_INPUT_PROMPT)
+
+    try:
+        profile.update_username(
+            new_username,
+        )
+    except NotChangeUsername as err:
+        print(err)
+    except ExistsUserError as err:
+        print(err)
+    except WrongUserName as err:
+        print(err)
+    else:
+        print(Message.SUCCESS_USERNAME_UPDATE_MESSAGE)
+
+    return profile
+
+
 def main() -> None:
     """
     Display the main menu.
