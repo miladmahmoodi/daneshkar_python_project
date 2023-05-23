@@ -206,7 +206,7 @@ def movies_list(profile: 'User') -> list[str]:
     pass
 
 
-def wallet():
+def wallet(profile: 'User'):
     print('-- wallet --')
     print('-- [0] Cancel [1] Wallet balance [2] Recharge wallet --')
     choice = input('Your choice: ')
