@@ -115,6 +115,38 @@ def update_profile(profile: User) -> None:
                 update_phone_number(profile)
 
 
+def update_password(profile: User) -> None:
+    """
+    Display a form for updating the user password.
+
+    The function prompts the user to enter their old password and new password.
+    Once the information is provided, the function calls the 'update_password' method of the given 'profile' object to
+    update the user password.
+    If the password is updated successfully, a message is printed to the console.
+
+    :param profile: A User object representing the user profile whose password needs to be updated.
+    :return: None.
+    """
+
+    print(Message.EDIT_PASSWORD_TITLE_PROMPT)
+    old_password = getpass(Message.EDIT_OLD_PASSWORD_INPUT_PROMPT)
+    new_password = getpass(Message.EDIT_NEW_PASSWORD_INPUT_PROMPT)
+    confirm_password = getpass(Message.EDIT_CONFIRM_PASSWORD_INPUT_PROMPT)
+
+    try:
+        profile.update_password(
+            old_password,
+            new_password,
+            confirm_password
+        )
+    except PasswordError as err:
+        print(err)
+    except ConfirmPasswordError as err:
+        print(err)
+    else:
+        print(Message.SUCCESS_PASSWORD_UPDATE_MESSAGE)
+
+
 def main() -> None:
     """
     Display the main menu.
