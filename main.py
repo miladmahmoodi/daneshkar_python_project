@@ -82,13 +82,13 @@ def sign_in() -> None:
                 case '3':
                     update_password(profile)
                 case '4':
-                    pass
+                    movies_list(profile)
                 case '5':
-                    pass
+                    wallet(profile)
                 case '6':
-                    pass
+                    tickets(profile)
                 case '7':
-                    pass
+                    subscription(profile)
                 case '8':
                     break
 
