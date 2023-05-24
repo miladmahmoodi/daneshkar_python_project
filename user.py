@@ -7,6 +7,7 @@ This module create for manage users.
 from utils.user_utils import Utils
 from utils.exceptions import *
 from utils.messages import Message
+from datetime import date, datetime
 
 
 class User:
@@ -15,11 +16,14 @@ class User:
     """
     __profiles = {}
 
-    def __init__(self, username: str, password: str, phone_number: str | None = None):
+    def __init__(self, username: str, password: str, birthday: date, phone_number: str | None = None, wallet: float = None):
+
         self.id = Utils.id_generator()
         self.__username = username
         self.phone_number = phone_number
         self.__password = password
+        self.birthday = birthday
+        self.wallet = wallet
 
     def sign_in(self, password: str) -> 'User':
         """
@@ -142,23 +146,26 @@ class User:
         return self
 
     @classmethod
-    def create(cls, username: str, password: str, phone_number: str = None) -> 'User':
+    def create(cls, username: str, password: str, birthday: str, phone_number: str = None) -> 'User':
         """
         Create a new user profile with the given username, phone_number, and password.
 
         :param username: A string representing the username.
         :param phone_number: A string representing the phone number.
         :param password: A string representing the password.
+        @param birthday: A string representing birthday date
         :return: If the input is valid, return a new instance of User. Otherwise, return an Exception object.
         """
 
         username = cls.check_username(username)
         password = Utils.check_password(password)
         phone_number = Utils.check_phone_number(phone_number)
+        birthday = Utils.check_birthday(birthday)
 
         profile = cls(
             username,
             password,
+            birthday,
             phone_number=phone_number,
         ).save()
 

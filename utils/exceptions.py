@@ -59,3 +59,7 @@ class NotChangeUsername(Exception):
     Raised when the username not changed.
     """
     pass
+
+
+class WrongDateValue(Exception):
+    pass
