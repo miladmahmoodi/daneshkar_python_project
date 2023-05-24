@@ -1,3 +1,5 @@
+from abc import ABC,abstractmethod
+
 class BankAccount:
 
     def __init__(self, owner_name: str, cvv2: str, password: str, balance: float) -> None:
@@ -37,3 +39,17 @@ class BankAccount:
         if amount <= 0:
             raise ValueError("Amount must be greater than zero")
         self.__balance += amount
+
+
+    @abstractmethod
+    def transfer(self, amount: float, destination_account: str) -> None:
+        """
+        Transfer an amount to another bank account
+        Args:
+            amount (float): The amount to transfer
+            destination_account (str): The destination account for the transfer
+        """
+        if amount <= 0:
+            raise ValueError("The amount cannot be zero")
+        if self.__balance < amount:
+            raise ValueError("Insufficient funds for transfer")
