@@ -15,8 +15,11 @@ class User:
     A class used to represent User.
     """
     __profiles = {}
+    movies_list = {}
+    __bank_list = {}
 
-    def __init__(self, username: str, password: str, birthday: date, phone_number: str | None = None, wallet: float = None):
+    def __init__(self, username: str, password: str, birthday: date, created_at: datetime,
+                 phone_number: str | None = None, wallet: float = None):
 
         self.id = Utils.id_generator()
         self.__username = username
@@ -24,6 +27,7 @@ class User:
         self.__password = password
         self.birthday = birthday
         self.wallet = wallet
+        self.created_at = created_at
 
     def sign_in(self, password: str) -> 'User':
         """
@@ -161,11 +165,13 @@ class User:
         password = Utils.check_password(password)
         phone_number = Utils.check_phone_number(phone_number)
         birthday = Utils.check_birthday(birthday)
+        created_at = datetime.now()
 
         profile = cls(
             username,
             password,
             birthday,
+            created_at,
             phone_number=phone_number,
         ).save()
 
