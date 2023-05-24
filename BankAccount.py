@@ -60,3 +60,10 @@ class BankAccount:
         Representing the Bank account
         """
         return f"The owner of bank account: {self.owner_name}, and Balance: {self.__balance}"
+    
+
+    def __str__(self) -> str:
+        """
+        Representing the bank information
+        """
+        return f"Bank Account Information: Owner Name: {self.owner_name}, Balance: {self.__balance}"
