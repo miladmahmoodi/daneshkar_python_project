@@ -26,3 +26,14 @@ class BankAccount:
             self.__balance -= amount
         else:
             print("Insufficient funds")
+
+
+    def __add__(self, amount: float) -> None:
+        """
+        Add amount to the balance account
+        Args:
+            amount (float): The amount to add to the bank account
+        """
+        if amount <= 0:
+            raise ValueError("Amount must be greater than zero")
+        self.__balance += amount
