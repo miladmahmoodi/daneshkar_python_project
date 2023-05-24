@@ -53,3 +53,10 @@ class BankAccount:
             raise ValueError("The amount cannot be zero")
         if self.__balance < amount:
             raise ValueError("Insufficient funds for transfer")
+        
+
+    def __repr__(self) -> str:
+        """
+        Representing the Bank account
+        """
+        return f"The owner of bank account: {self.owner_name}, and Balance: {self.__balance}"
