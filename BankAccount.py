@@ -14,3 +14,15 @@ class BankAccount:
         self.__password = password
         self.cvv2 = cvv2
 
+    def __sub__(self, amount: float) -> None:
+        """
+        Subtracts amount from bank account
+        Args:
+            amount (float): The amount to subtract from the bank account
+        """
+        if amount <= 0:
+            raise ValueError("Amount must be greater than zero")
+        if amount <= self.__balance:
+            self.__balance -= amount
+        else:
+            print("Insufficient funds")
