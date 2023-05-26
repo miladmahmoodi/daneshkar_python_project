@@ -3,7 +3,7 @@
 """
 This module create for manage users.
 """
-
+from utils.exceptions import NotExistsUserError
 from utils.user_utils import Utils
 from utils.exceptions import *
 from utils.messages import Message
@@ -15,11 +15,12 @@ class User:
     """
     __profiles = {}
 
-    def __init__(self, username: str, password: str, phone_number: str | None = None):
+    def __init__(self, username: str, password: str, phone_number: str | None = None, wallet: int = 0) -> None:
         self.id = Utils.id_generator()
         self.__username = username
         self.phone_number = phone_number
         self.__password = password
+        self.wallet = wallet
 
     def sign_in(self, password: str) -> 'User':
         """
@@ -142,7 +143,7 @@ class User:
         return self
 
     @classmethod
-    def create(cls, username: str, password: str, phone_number: str = None) -> 'User':
+    def create(cls, username: str, password: str, phone_number: str = None) -> NotExistsUserError | "User":
         """
         Create a new user profile with the given username, phone_number, and password.
 
@@ -166,6 +167,18 @@ class User:
             return NotExistsUserError(Message.SOMETHING_WRONG)
 
         return profile
+
+    def deposit_wallet(self, amount: int) -> 'User':
+        """
+        Deposit the given amount to the user's wallet.
+
+        :param amount: An integer representing the amount to be deposited.
+        :return: The instance of User.
+        """
+
+        self.wallet += amount
+
+        return self
 
     def __str__(self) -> str:
         """
