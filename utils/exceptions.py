@@ -59,3 +59,17 @@ class NotChangeUsername(Exception):
     Raised when the username not changed.
     """
     pass
+
+
+class ShowDoesNotExist(Exception):
+    """
+    Raised when the show does not exist.
+    """
+    pass
+
+
+class AgeLimitError(Exception):
+    """
+    Raised when the user is under 18 years old.
+    """
+    pass
