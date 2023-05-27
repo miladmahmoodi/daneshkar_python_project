@@ -8,6 +8,7 @@ from utils.user_utils import Utils
 from utils.exceptions import *
 from utils.messages import Message
 from datetime import date, datetime
+from enum import Enum
 
 
 class User:
@@ -17,8 +18,18 @@ class User:
     __profiles = {}
     movies_list = {}
     __bank_list = {}
+    __wallet = 0.0
 
-    def __init__(self, username: str, password: str, birthday: date, created_at: datetime,
+    class Permission(Enum):
+        admin = 0
+        user = 1
+
+    class SubscriptionType(Enum):
+        bronze = 0
+        silver = 1
+        gold = 2
+
+    def __init__(self, username: str, password: str, birthday: date, created_at: datetime, updated_at: datetime | None = None,
                  phone_number: str | None = None, wallet: float = None):
 
         self.id = Utils.id_generator()
@@ -28,6 +39,7 @@ class User:
         self.birthday = birthday
         self.wallet = wallet
         self.created_at = created_at
+        self.updated_at = updated_at
 
     def sign_in(self, password: str) -> 'User':
         """
@@ -63,6 +75,7 @@ class User:
 
         self.__username = username
         type(self).__profiles[username] = self
+        self.updated_at = datetime.now()
 
         return self
 
@@ -77,6 +90,7 @@ class User:
         phone_number = Utils.check_phone_number(phone_number)
 
         self.phone_number = phone_number
+        self.updated_at = datetime.now()
 
         return self
 
@@ -146,8 +160,12 @@ class User:
             raise ConfirmPasswordError(Message.NOT_MATCH_PASSWORD)
 
         self.__password = Utils.check_password(new_password)
+        self.updated_at = datetime.now()
 
         return self
+
+    # def add_bank_account(self, bank: "BankAccount"):
+    #     self.__bank_list[self.__username] = bank
 
     @classmethod
     def create(cls, username: str, password: str, birthday: str, phone_number: str = None) -> 'User':
@@ -166,13 +184,17 @@ class User:
         phone_number = Utils.check_phone_number(phone_number)
         birthday = Utils.check_birthday(birthday)
         created_at = datetime.now()
+        updated_at = None
+        wallet = None
 
         profile = cls(
             username,
             password,
             birthday,
             created_at,
+            updated_at,
             phone_number=phone_number,
+            wallet = None
         ).save()
 
         if not cls.exists_user(username):
