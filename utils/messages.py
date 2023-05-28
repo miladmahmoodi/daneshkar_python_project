@@ -54,9 +54,6 @@ class Message:
     SHOW_DOES_NOT_EXIST_MESSAGE = "\033[91m{}\033[00m".format(
         'The show is not live.'
     )
-    AGE_LIMIT_ERROR_MESSAGE = "\033[91m{}\033[00m".format(
-        'You are not allowed to watch this show.'
-    )
 
     @staticmethod
     def welcome_user_message(username: str) -> str:
