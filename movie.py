@@ -5,7 +5,12 @@ from utils.exceptions import *
 from utils.messages import Message
 
 
-def save_to_json(movie: 'Movie'):
+def save_to_json(movie: 'Movie') -> None:
+    """
+    Saves the movie data to the json file
+    :param movie: Movie object
+    :return: None
+    """
     movie_data = {
         "cinema": movie.cinema,
         "title": movie.title,
@@ -26,6 +31,18 @@ def save_to_json(movie: 'Movie'):
 class Movie:
     def __init__(self, cinema: str, title: str, genre: str, discount: float, age_limit: int,
                  is_live: bool, price: float, sold: float, date_time: datetime = None, total_sales: int = 0):
+        """
+        :param cinema: Cinema name
+        :param title: Movie title
+        :param genre: Movie genre
+        :param discount: Discount percentage
+        :param age_limit: Age limit
+        :param is_live: Is the movie live
+        :param price: Movie price
+        :param sold: Number of sold tickets
+        :param date_time: Movie date and time
+        :param total_sales: Total sales
+        """
         self.cinema = cinema
         self.title = title
         self.genre = genre
@@ -44,6 +61,11 @@ class Movie:
 
     @classmethod
     def reserve(cls, movie: 'Movie') -> None:
+        """
+        Reserves a movie
+        :param movie: Movie object
+        :return: None
+        """
         if not movie.is_live:
             raise ShowDoesNotExist(Message.SHOW_DOES_NOT_EXIST_MESSAGE)
 
