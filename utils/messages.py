@@ -52,6 +52,18 @@ class Message:
         'Usernames must start with a letter, be at least 3 characters long, and can only contain letters and numbers.'
     )
 
+    NO_SALON_FOUND = "\033[91m{}\033[00m" .format(
+        'No salon with that name found.'
+    )
+
+    REPEATED_SALON_NAME = "\033[91m{}\033[00m".format(
+        'Same salon name found in salon lists.'
+    )
+
+    CAPACITY = "\033[91m{}\033[00m".format(
+        'Salon capacity should be more than 0.'
+    )
+
     @staticmethod
     def welcome_user_message(username: str) -> str:
         """
