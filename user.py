@@ -29,15 +29,16 @@ class User:
         silver = 1
         gold = 2
 
-    def __init__(self, username: str, password: str, birthday: date, created_at: datetime, updated_at: datetime | None = None,
-                 phone_number: str | None = None, wallet: float = None):
+    def __init__(self, username: str, password: str, birthday: date, created_at: datetime,
+                 updated_at: datetime | None = None,
+                 phone_number: str | None = None):
 
         self.id = Utils.id_generator()
         self.__username = username
         self.phone_number = phone_number
         self.__password = password
         self.birthday = birthday
-        self.wallet = wallet
+        self.wallet = 0.0
         self.created_at = created_at
         self.updated_at = updated_at
 
@@ -74,8 +75,8 @@ class User:
         del type(self).__profiles[old_username]
 
         self.__username = username
-        type(self).__profiles[username] = self
         self.updated_at = datetime.now()
+        type(self).__profiles[username] = self
 
         return self
 
@@ -185,7 +186,6 @@ class User:
         birthday = Utils.check_birthday(birthday)
         created_at = datetime.now()
         updated_at = None
-        wallet = None
 
         profile = cls(
             username,
@@ -194,7 +194,6 @@ class User:
             created_at,
             updated_at,
             phone_number=phone_number,
-            wallet = None
         ).save()
 
         if not cls.exists_user(username):
