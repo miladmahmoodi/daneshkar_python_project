@@ -9,6 +9,7 @@ from utils.exceptions import *
 from utils.messages import Message
 from datetime import date, datetime
 from enum import Enum
+import json
 
 
 class User:
@@ -102,6 +103,9 @@ class User:
         :return: None
         """
         type(self).__profiles[self.__username] = self
+        json_string = json.dumps(type(self).__profiles, separators=(","))
+        with open("database/users.json", "a+") as f:
+            f.write(json_string)
         return self
 
     @staticmethod
@@ -127,6 +131,9 @@ class User:
         if not User.exists_user(username):
             raise ExistsUserError(Message.NOT_EXIST_USER_MESSAGE)
 
+        with open("database/users.json", "r") as f:
+            json_string = f.read()
+        User.__profiles = json.loads(json_string)
         return User.__profiles[username]
 
     @staticmethod
@@ -137,6 +144,9 @@ class User:
         :param username: A string representing the username to be checked.
         :return: True if the username exists in the profiles list, False otherwise.
         """
+        with open("database/users.json", "r") as f:
+            json_string = f.read()
+        User.__profiles = json.loads(json_string)
 
         return username in User.__profiles
 
