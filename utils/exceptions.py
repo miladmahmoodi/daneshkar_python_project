@@ -61,6 +61,11 @@ class NotChangeUsername(Exception):
     pass
 
 
+class WrongDateValue(Exception):
+    """
+    """
+    pass
+
 class ShowDoesNotExist(Exception):
     """
     Raised when the show does not exist.

@@ -7,6 +7,9 @@ This module create for manage users.
 from utils.user_utils import Utils
 from utils.exceptions import *
 from utils.messages import Message
+from datetime import date, datetime
+from enum import Enum
+import json
 
 
 class User:
@@ -14,12 +17,31 @@ class User:
     A class used to represent User.
     """
     __profiles = {}
+    movies_list = {}
+    __bank_list = {}
+    __wallet = 0.0
 
-    def __init__(self, username: str, password: str, phone_number: str | None = None):
+    class Permission(Enum):
+        admin = 0
+        user = 1
+
+    class SubscriptionType(Enum):
+        bronze = 0
+        silver = 1
+        gold = 2
+
+    def __init__(self, username: str, password: str, birthday: date, created_at: datetime,
+                 updated_at: datetime | None = None,
+                 phone_number: str | None = None):
+
         self.id = Utils.id_generator()
         self.__username = username
         self.phone_number = phone_number
         self.__password = password
+        self.birthday = birthday
+        self.wallet = 0.0
+        self.created_at = created_at
+        self.updated_at = updated_at
 
     def sign_in(self, password: str) -> 'User':
         """
@@ -54,6 +76,7 @@ class User:
         del type(self).__profiles[old_username]
 
         self.__username = username
+        self.updated_at = datetime.now()
         type(self).__profiles[username] = self
 
         return self
@@ -69,6 +92,7 @@ class User:
         phone_number = Utils.check_phone_number(phone_number)
 
         self.phone_number = phone_number
+        self.updated_at = datetime.now()
 
         return self
 
@@ -79,6 +103,9 @@ class User:
         :return: None
         """
         type(self).__profiles[self.__username] = self
+        json_string = json.dumps(type(self).__profiles, separators=(","))
+        with open("database/users.json", "a+") as f:
+            f.write(json_string)
         return self
 
     @staticmethod
@@ -104,6 +131,9 @@ class User:
         if not User.exists_user(username):
             raise ExistsUserError(Message.NOT_EXIST_USER_MESSAGE)
 
+        with open("database/users.json", "r") as f:
+            json_string = f.read()
+        User.__profiles = json.loads(json_string)
         return User.__profiles[username]
 
     @staticmethod
@@ -114,6 +144,9 @@ class User:
         :param username: A string representing the username to be checked.
         :return: True if the username exists in the profiles list, False otherwise.
         """
+        with open("database/users.json", "r") as f:
+            json_string = f.read()
+        User.__profiles = json.loads(json_string)
 
         return username in User.__profiles
 
@@ -138,27 +171,38 @@ class User:
             raise ConfirmPasswordError(Message.NOT_MATCH_PASSWORD)
 
         self.__password = Utils.check_password(new_password)
+        self.updated_at = datetime.now()
 
         return self
 
+    # def add_bank_account(self, bank: "BankAccount"):
+    #     self.__bank_list[self.__username] = bank
+
     @classmethod
-    def create(cls, username: str, password: str, phone_number: str = None) -> 'User':
+    def create(cls, username: str, password: str, birthday: str, phone_number: str = None) -> 'User':
         """
         Create a new user profile with the given username, phone_number, and password.
 
         :param username: A string representing the username.
         :param phone_number: A string representing the phone number.
         :param password: A string representing the password.
+        @param birthday: A string representing birthday date
         :return: If the input is valid, return a new instance of User. Otherwise, return an Exception object.
         """
 
         username = cls.check_username(username)
         password = Utils.check_password(password)
         phone_number = Utils.check_phone_number(phone_number)
+        birthday = Utils.check_birthday(birthday)
+        created_at = datetime.now()
+        updated_at = None
 
         profile = cls(
             username,
             password,
+            birthday,
+            created_at,
+            updated_at,
             phone_number=phone_number,
         ).save()
 
