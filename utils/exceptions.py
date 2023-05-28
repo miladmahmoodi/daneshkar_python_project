@@ -59,3 +59,10 @@ class NotChangeUsername(Exception):
     Raised when the username not changed.
     """
     pass
+
+
+class ShowDoesNotExist(Exception):
+    """
+    Raised when the show does not exist.
+    """
+    pass
