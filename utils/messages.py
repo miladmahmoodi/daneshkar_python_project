@@ -55,7 +55,7 @@ class Message:
         'username or password is wrong.'
     )
 
-      WRONG_DATE_VALUE = "\033[91m{}\033[00m" .format(
+    WRONG_DATE_VALUE = "\033[91m{}\033[00m" .format(
         'Please input the right date - example(dd/mm/yyyy).'
     )
 
