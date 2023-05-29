@@ -102,8 +102,7 @@ class User:
 
         :return: None
         """
-        type(self).__profiles[self.__username] = self
-        json_string = json.dumps(type(self).__profiles, separators=(","))
+        json_string = json.dumps(self.__dict__)
         with open("database/users.json", "a+") as f:
             f.write(json_string)
         return self
