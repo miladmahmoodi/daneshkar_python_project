@@ -18,7 +18,6 @@ class Bank(BankAccount):
         type(self).__accounts[self.owner_name] = self
         type(self).save()
 
-
     def __add__(self, amount: float):
         """
 
@@ -29,21 +28,13 @@ class Bank(BankAccount):
         account_data = self.get_bank_account(self.owner_name)
 
         if account_data['cvv2'] != self.cvv2 and account_data['password'] != self.password:
-            raise exceptions.CVV2_PASSWORD_ERROR(Message.WRONG_CVV2_PASSWORD)
+            raise exceptions.Cvv2PasswordError(Message.WRONG_CVV2_PASSWORD)
 
         if self._balance + amount < self.__MINIMUM:
             raise exceptions.BalanceError(Message.MINIMUM_BALANCE_ERROR)
 
         super().__add__(amount)
-    
-    def TRANSFER_FEE(self, amount):
-        """
-        The fee that is deducted from the user's account for each transfer
-        and if it is more than 1 milion if will reduce 1000 toman from balance 
-        """
-        if amount > 10_000_000:
-            return self.__balance - 1_000
-        return self.__balance - 600
+
     
     def __sub__(self, amount: float):
         """
