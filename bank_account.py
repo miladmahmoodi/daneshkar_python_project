@@ -8,19 +8,15 @@ from utils.messages import Message
 class BankAccount(ABC):
     MINIMUM_BALANCE = 10_000
 
-    def __init__(self, owner_name: str, cvv2: str, password: str, balance: float) -> None:
+    def __init__(self, owner_name: str, balance: float) -> None:
         """
 
         :param owner_name:
-        :param cvv2:
-        :param password:
         :param balance:
         """
 
         self.owner_name = owner_name
         self._balance = balance
-        self.__password = password
-        self.cvv2 = cvv2
 
     @property
     def balance(self):
