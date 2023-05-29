@@ -132,8 +132,8 @@ class User:
 
         with open("database/users.json", "r") as f:
             json_string = f.read()
-        User.__profiles = json.loads(json_string)
-        return User.__profiles[username]
+        user_data = json.loads(json_string)
+        return user_data[username]
 
     @staticmethod
     def exists_user(username: str) -> bool:
