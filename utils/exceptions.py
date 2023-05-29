@@ -92,3 +92,17 @@ class SuperUserError(Exception):
 
     """
     pass
+
+
+class BalanceError(Exception):
+    """
+
+    """
+    pass
+
+
+class Cvv2PasswordError(Exception):
+    """
+
+    """
+    pass
