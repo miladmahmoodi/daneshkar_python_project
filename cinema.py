@@ -1,4 +1,5 @@
 #!usr/bin/python3
+import pickle
 
 from utils import exceptions
 from utils import messages
@@ -22,8 +23,17 @@ class Cinema:
 
         cls.salon_list[name] = capacity
 
-    def save(self):
-        pass
+    @classmethod
+    def save(cls):
+        with open("database/cinema.pickle", "wb") as f:
+            pickle.dump(cls.salon_list, f)
+            del cls.salon_list
+
+    @classmethod
+    def load(cls):
+        with open("database/cinema.pickle", "rb") as f:
+            data = pickle.load(f)
+        return data
 
     @staticmethod
     def get_salon(name: str):
@@ -34,8 +44,9 @@ class Cinema:
         """
         if not Cinema.is_salon_exist(name):
             raise exceptions.NoSalonFound(messages.Message.NO_SALON_FOUND)
-        else:
-            return Cinema.salon_list[name]
+
+        cinema_data = Cinema.load()
+        return cinema_data[name]
 
     @staticmethod
     def is_salon_exist(name: str):
@@ -44,4 +55,4 @@ class Cinema:
         @param name: string
         @return: boolean
         """
-        return name in Cinema.salon_list
+        return name in Cinema.load()
