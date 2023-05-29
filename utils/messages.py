@@ -75,6 +75,14 @@ class Message:
         'Salon capacity should be more than 0.'
     )
 
+    MINIMUM_BALANCE_ERROR = "\033[91m{}\033[00m".format(
+        'balance error'
+    )
+
+    WRONG_CVV2_PASSWORD = "\033[91m{}\033[00m".format(
+        'cvv2 or password is wrong.'
+    )
+
     @staticmethod
     def welcome_user_message(username: str) -> str:
         """
