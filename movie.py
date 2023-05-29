@@ -1,36 +1,15 @@
-import json
+import pickle
 from datetime import datetime
 
 from utils.exceptions import *
 from utils.messages import Message
 
 
-def save_to_json(movie: 'Movie') -> None:
-    """
-    Saves the movie data to the json file
-    :param movie: Movie object
-    :return: None
-    """
-    movie_data = {
-        "cinema": movie.cinema,
-        "title": movie.title,
-        "genre": movie.genre,
-        "discount": movie.discount,
-        "age_limit": movie.age_limit,
-        "date_time": movie.date_time.isoformat(),
-        "is_live": movie.is_live,
-        "price": movie.price,
-        "sold": movie.sold,
-        "total_sales": movie.total_sales
-    }
-
-    with open('database/movies.json', "w") as json_file:
-        json.dump(movie_data, json_file)
-
-
 class Movie:
+    movie_list = {}
+
     def __init__(self, cinema: str, title: str, genre: str, discount: float, age_limit: int,
-                 is_live: bool, price: float, sold: float, date_time: datetime = None, total_sales: int = 0):
+                 price: float, date_time: datetime = None):
         """
         :param cinema: Cinema name
         :param title: Movie title
@@ -49,15 +28,17 @@ class Movie:
         self.discount = discount
         self.age_limit = age_limit
         self.date_time = date_time if date_time else datetime.now()
-        self.is_live = is_live
+        self.is_live = self.is_live()
         self.price = price
-        self.sold = sold
-        self.total_sales = total_sales
+        self.sold = 0
+        self.total_sales = 0
 
     @classmethod
     def create(cls, cinema: str, title: str, genre: str, discount: float, age_limit: int,
-               is_live: bool, price: float, sold: float) -> None:
-        return save_to_json(cls(cinema, title, genre, discount, age_limit, is_live, price, sold))
+               price: float, date_time: datetime = None) -> dict:
+        new_movie = cls(cinema, title, genre, discount, age_limit, price, date_time)
+        cls.movie_list[title] = new_movie
+        return cls.movie_list
 
     @classmethod
     def reserve(cls, movie: 'Movie') -> None:
@@ -75,3 +56,18 @@ class Movie:
         movie.sold += 1
         movie.total_sales += 1
         return save_to_json(movie)
+
+    def is_live(self) -> bool:
+        pass
+
+    @classmethod
+    def save(cls):
+        with open("database/movie.pickle", "wb") as f:
+            pickle.dump(cls.movie_list, f)
+            del cls.movie_list
+
+    @classmethod
+    def load(cls):
+        with open("database/movie.pickle", "rb") as f:
+            loaded_movie_list = pickle.load(f)
+        return loaded_movie_list
