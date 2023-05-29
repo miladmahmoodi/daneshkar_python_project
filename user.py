@@ -3,11 +3,12 @@
 """
 This module create for manage users.
 """
+import pickle
 
 from utils.user_utils import Utils
 from utils.exceptions import *
 from utils.messages import Message
-from datetime import date, datetime
+from datetime import datetime
 from enum import Enum
 import json
 
@@ -17,7 +18,7 @@ class User:
     A class used to represent User.
     """
     __profiles = {}
-    movies_list = {}
+    movies_list = []
     __bank_list = {}
     __wallet = 0.0
 
@@ -30,9 +31,7 @@ class User:
         silver = 1
         gold = 2
 
-    def __init__(self, username: str, password: str, birthday: date, created_at: datetime,
-                 updated_at: datetime | None = None,
-                 phone_number: str | None = None):
+    def __init__(self, username: str, password: str, birthday: datetime, phone_number: str | None = None):
 
         self.id = Utils.id_generator()
         self.__username = username
@@ -40,8 +39,10 @@ class User:
         self.__password = password
         self.birthday = birthday
         self.wallet = 0.0
-        self.created_at = created_at
-        self.updated_at = updated_at
+        self.created_at = datetime.now()
+        self.updated_at = datetime.now()
+
+        type(self).__profiles[username] = self
 
     def sign_in(self, password: str) -> 'User':
         """
@@ -72,12 +73,14 @@ class User:
 
         username = type(self).check_username(username)
 
-        old_username = self.__username
-        del type(self).__profiles[old_username]
+        type(self).__profiles = type(self).load()
+
+        del type(self).__profiles[self.__username]
 
         self.__username = username
         self.updated_at = datetime.now()
         type(self).__profiles[username] = self
+        type(self).save()
 
         return self
 
@@ -91,21 +94,38 @@ class User:
 
         phone_number = Utils.check_phone_number(phone_number)
 
+        type(self).__profiles[self.__username] = type(self).get_profile(self.__username)
+
         self.phone_number = phone_number
         self.updated_at = datetime.now()
 
+        type(self).save()
+
         return self
 
-    def save(self) -> 'User':
+    @classmethod
+    def save(cls) -> None:
         """
         Saves the user profile to the class private variable `profiles` with the username key.
 
         :return: None
         """
-        json_string = json.dumps(self.__dict__)
-        with open("database/users.pickle", "a+") as f:
-            f.write(json_string)
-        return self
+        with open("database/users.pickle", "wb") as file:
+            pickle.dump(
+                cls.__profiles,
+                file,
+            )
+        cls.__profiles.clear()
+
+    @classmethod
+    def load(cls):
+        """
+
+        :return:
+        """
+
+        with open('database/users.pickle', 'rb') as file:
+            return pickle.load(file)
 
     @staticmethod
     def check_username(username: str) -> str:
@@ -130,10 +150,8 @@ class User:
         if not User.exists_user(username):
             raise ExistsUserError(Message.NOT_EXIST_USER_MESSAGE)
 
-        with open("database/users.pickle", "r") as f:
-            json_string = f.read()
-        user_data = json.loads(json_string)
-        return user_data[username]
+        users_data = User.load()
+        return users_data[username]
 
     @staticmethod
     def exists_user(username: str) -> bool:
@@ -143,11 +161,10 @@ class User:
         :param username: A string representing the username to be checked.
         :return: True if the username exists in the profiles list, False otherwise.
         """
-        with open("database/users.pickle", "r") as f:
-            json_string = f.read()
-        user_data = json.loads(json_string)
 
-        return username in user_data
+        users_data = User.load()
+
+        return username in users_data
 
     def update_password(self, old_password: str, new_password: str, confirm_password: str) -> 'User':
         """
@@ -169,23 +186,25 @@ class User:
         if new_password != confirm_password:
             raise ConfirmPasswordError(Message.NOT_MATCH_PASSWORD)
 
+        type(self).__profiles[self.__username] = type(self).get_profile(self.__username)
+
         self.__password = Utils.check_password(new_password)
         self.updated_at = datetime.now()
 
+        type(self).save()
+
         return self
 
-    # def add_bank_account(self, bank: "BankAccount"):
-    #     self.__bank_list[self.__username] = bank
 
     @classmethod
-    def create(cls, username: str, password: str, birthday: str, phone_number: str = None) -> 'User':
+    def create(cls, username: str, password: str, birthday: str, phone_number: str = None) -> None | Exception:
         """
         Create a new user profile with the given username, phone_number, and password.
 
         :param username: A string representing the username.
-        :param phone_number: A string representing the phone number.
         :param password: A string representing the password.
-        @param birthday: A string representing birthday date
+        :param birthday: A string representing birthday date
+        :param phone_number: A string representing the phone number.
         :return: If the input is valid, return a new instance of User. Otherwise, return an Exception object.
         """
 
@@ -193,22 +212,16 @@ class User:
         password = Utils.check_password(password)
         phone_number = Utils.check_phone_number(phone_number)
         birthday = Utils.check_birthday(birthday)
-        created_at = datetime.now()
-        updated_at = None
 
-        profile = cls(
+        cls(
             username,
             password,
             birthday,
-            created_at,
-            updated_at,
             phone_number=phone_number,
         ).save()
 
         if not cls.exists_user(username):
             return NotExistsUserError(Message.SOMETHING_WRONG)
-
-        return profile
 
     def __str__(self) -> str:
         """
