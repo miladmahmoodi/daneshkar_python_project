@@ -74,11 +74,13 @@ class SameSalonFound(Exception):
 
 class ZeroCapacityError(Exception):
     pass
- 
+
+
 class WrongDateValue(Exception):
     """
     """
     pass
+
 
 class ShowDoesNotExist(Exception):
     """
@@ -102,6 +104,13 @@ class BalanceError(Exception):
 
 
 class Cvv2PasswordError(Exception):
+    """
+
+    """
+    pass
+
+
+class DiscountError(Exception):
     """
 
     """
