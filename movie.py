@@ -1,36 +1,17 @@
-import json
+import pickle
 from datetime import datetime
-
+from cinema import Cinema
 from utils.exceptions import *
 from utils.messages import Message
-
-
-def save_to_json(movie: 'Movie') -> None:
-    """
-    Saves the movie data to the json file
-    :param movie: Movie object
-    :return: None
-    """
-    movie_data = {
-        "cinema": movie.cinema,
-        "title": movie.title,
-        "genre": movie.genre,
-        "discount": movie.discount,
-        "age_limit": movie.age_limit,
-        "date_time": movie.date_time.isoformat(),
-        "is_live": movie.is_live,
-        "price": movie.price,
-        "sold": movie.sold,
-        "total_sales": movie.total_sales
-    }
-
-    with open('database/movies.json', "w") as json_file:
-        json.dump(movie_data, json_file)
+from user import User
+from bank import Bank
 
 
 class Movie:
-    def __init__(self, cinema: str, title: str, genre: str, discount: float, age_limit: int,
-                 is_live: bool, price: float, sold: float, date_time: datetime = None, total_sales: int = 0):
+    movie_list = {}
+
+    def __init__(self, cinema: str, salon: str, title: str, genre: str, discount: float, age_limit: int,
+                 price: float, date_time: datetime = None):
         """
         :param cinema: Cinema name
         :param title: Movie title
@@ -44,34 +25,84 @@ class Movie:
         :param total_sales: Total sales
         """
         self.cinema = cinema
+        self.salon = salon
         self.title = title
         self.genre = genre
         self.discount = discount
         self.age_limit = age_limit
         self.date_time = date_time if date_time else datetime.now()
-        self.is_live = is_live
+        self.is_live = self.is_live()
         self.price = price
-        self.sold = sold
-        self.total_sales = total_sales
+        self.sold = 0
+        self.total_sales = 0
 
     @classmethod
     def create(cls, cinema: str, title: str, genre: str, discount: float, age_limit: int,
-               is_live: bool, price: float, sold: float) -> None:
-        return save_to_json(cls(cinema, title, genre, discount, age_limit, is_live, price, sold))
+               price: float, date_time: datetime = None) -> dict:
+        new_movie = cls(cinema, title, genre, discount, age_limit, price, date_time)
+        cls.movie_list[title] = new_movie
+        return cls.movie_list
+
+    # def reserve(self, cinema: "Cinema", user: "User", bank: "Bank") -> None:
+    #     """
+    #
+    #     @param cinema:
+    #     @param user:
+    #     @return:
+    #     """
+    #
+    #     if not self.is_live:
+    #         raise ShowDoesNotExist(Message.SHOW_DOES_NOT_EXIST_MESSAGE)
+    #
+    #     if self.age_limit <= user.age:
+    #         raise AgeLimit(Message.AGE_LIMIT_ERROR)
+    #
+    #     bank.
+    #     user.movies_list.append(self)
+    #     salon_data = cinema.get_salon(self.salon)
+    #     salon_data["capacity"] -= 1
+
+    def is_live(self) -> bool:
+        if self.date_time <= datetime.now():
+            return True
+
+        return False
 
     @classmethod
-    def reserve(cls, movie: 'Movie') -> None:
-        """
-        Reserves a movie
-        :param movie: Movie object
-        :return: None
-        """
-        if not movie.is_live:
-            raise ShowDoesNotExist(Message.SHOW_DOES_NOT_EXIST_MESSAGE)
+    def save(cls):
+        with open("database/movie.pickle", "wb") as f:
+            pickle.dump(cls.movie_list, f)
+        cls.movie_list.clear()
 
-        if datetime.now().date() != movie.date_time.date() or datetime.now().time() != movie.date_time.time():
-            raise ShowDoesNotExist(Message.SHOW_DOES_NOT_EXIST_MESSAGE)
+    @classmethod
+    def load(cls):
+        with open("database/movie.pickle", "rb") as f:
+            loaded_movie_list = pickle.load(f)
+        return loaded_movie_list
 
-        movie.sold += 1
-        movie.total_sales += 1
-        return save_to_json(movie)
+    def final_price(self, user: "User"):
+        final_price = self.price
+        if user.birthday.day == self.date_time.day and user.birthday.month == user.birthday.month:
+            final_price -= type(self).apply_discount(self.price, 0.5)
+
+        time_passed = datetime.now() - self.date_time
+        month_passed = int(time_passed.days / 30)
+        if month_passed > 100:
+            month_passed = 100
+
+        final_price -= type(self).apply_discount(self.price, month_passed)
+        return final_price
+
+    @staticmethod
+    def apply_discount(price: float, discount: float = 0.0) -> float:
+        """
+
+        @param price:
+        @param discount:
+        @return:
+        """
+        if not 0 <= discount <= 1:
+            raise DiscountError(Message.DISCOUNT_ERROR)
+
+        discount_price = price * discount
+        return discount_price
