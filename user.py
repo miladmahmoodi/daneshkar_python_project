@@ -132,8 +132,8 @@ class User:
 
         with open("database/users.json", "r") as f:
             json_string = f.read()
-        User.__profiles = json.loads(json_string)
-        return User.__profiles[username]
+        user_data = json.loads(json_string)
+        return user_data[username]
 
     @staticmethod
     def exists_user(username: str) -> bool:
@@ -145,9 +145,9 @@ class User:
         """
         with open("database/users.json", "r") as f:
             json_string = f.read()
-        User.__profiles = json.loads(json_string)
+        user_data = json.loads(json_string)
 
-        return username in User.__profiles
+        return username in user_data
 
     def update_password(self, old_password: str, new_password: str, confirm_password: str) -> 'User':
         """
