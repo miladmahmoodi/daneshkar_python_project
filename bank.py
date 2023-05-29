@@ -55,7 +55,7 @@ class Bank(BankAccount):
         account_data = self.get_bank_account(self.owner_name)
 
         if account_data['cvv2'] != self.cvv2 and account_data['password'] != self.password:
-            raise exceptions.CVV2_PASSWORD_ERROR(Message.WRONG_CVV2_PASSWORD)
+            raise exceptions.Cvv2PasswordError(Message.WRONG_CVV2_PASSWORD)
 
         if self._balance - amount < self.__MINIMUM:
             raise exceptions.BalanceError(Message.MINIMUM_BALANCE_ERROR)
