@@ -1,51 +1,40 @@
 #! /usr/bin/python3
 
-
-from abc import ABC
 import pickle
-from tkinter import SEL_FIRST
-from bank_acoount import BankAccount
+from bank_account import BankAccount
+from utils import exceptions
+from utils.messages import Message
 
 
-class Bank(BankAccount, ABC): 
-    __MINIMUM = 10_000 
-    __accounts = []
-    
-    def __init__(self, owner, balance) -> None:
-        super().__init__(owner, balance)
-        type(self).__accounts.append(self) 
+class Bank(BankAccount):
+    __MINIMUM = 10_000
+    transfer_fee = 600
+    __accounts = dict()
+
+    def __init__(self, owner_name: str, cvv2: str, password: str, balance: float) -> None:
+        super().__init__(owner_name, balance)
+        self.cvv2 = cvv2
+        self.password = password
+        type(self).__accounts[self.owner_name] = self
+        type(self).save()
 
 
-    def create_account(self, account_number:str, balance:float, password:str, cvv2:str):
+    def __add__(self, amount: float):
         """
-        creating different bank acccount
-        """
-        new_account = BankAccount(account_number, balance, password, cvv2)
-        self.accounts.append(new_account)
-        return f"New account {account_number} created for {self.name}."
-    
 
-    
-    def select_account(self):
+        :param amount:
+        :return:
         """
-        selecting different account and return that
-        """
-        print("Select your account:")
-        for i, account in enumerate(self.accounts):
-            return f"{i+1}. Account {account.account_number} ({account.balance})"
-        account_choice = int(input("Enter account number: "))
-        return self.accounts[account_choice - 1]
 
+        account_data = self.get_bank_account(self.owner_name)
 
-    def __add__(self, amount:int):
-        """
-        addig amount of money and checking balance to be more than minimum
-        """
-        if self.amoumt < 0:
-            raise ValueError('Invalid amount')
-        if self.__balance + amount < self.__MINIMUM: 
-            raise ValueError('Invalid balance')
-        return type(self).__add__(amount)
+        if account_data['cvv2'] != self.cvv2 and account_data['password'] != self.password:
+            raise exceptions.CVV2_PASSWORD_ERROR(Message.WRONG_CVV2_PASSWORD)
+
+        if self._balance + amount < self.__MINIMUM:
+            raise exceptions.BalanceError(Message.MINIMUM_BALANCE_ERROR)
+
+        super().__add__(amount)
     
     def TRANSFER_FEE(self, amount):
         """
@@ -56,37 +45,57 @@ class Bank(BankAccount, ABC):
             return self.__balance - 1_000
         return self.__balance - 600
     
-    def __sub__(self, amount):
-        if self.__balance - amount < self.__MINIMUM: 
-            raise ValueError('Invalid balance')
-        return type(self).__sub__(amount)
-    
+    def __sub__(self, amount: float):
+        """
 
-    def transfer(self, Admin: 'BankAccount', amount: int):
+        :param amount:
+        :return:
+        """
+
+        account_data = self.get_bank_account(self.owner_name)
+
+        if account_data['cvv2'] != self.cvv2 and account_data['password'] != self.password:
+            raise exceptions.CVV2_PASSWORD_ERROR(Message.WRONG_CVV2_PASSWORD)
+
+        if self._balance - amount < self.__MINIMUM:
+            raise exceptions.BalanceError(Message.MINIMUM_BALANCE_ERROR)
+
+        super().__sub__(amount)
+
+    def transfer(self, other: 'BankAccount', amount: float):
         if amount < 0: 
-            raise ValueError('Invalid amount')
-        self - TRANSFER_FEE(self)
-        Admin + amount  
-            
-        
+            raise exceptions.BalanceError(Message.MINIMUM_BALANCE_ERROR)
+
+        self.__sub__(amount - type(self).transfer_fee)
+        other.__add__(amount)
+
     @classmethod
-    def save(cls):
-        with open('account_pickle', 'wb')as file:
+    def save(cls) -> None:
+        """
+
+        :return:
+        """
+
+        with open('database/bank.pickle', 'wb') as file:
             pickle.dump(cls.__accounts, file)
+        del cls.__accounts
 
     @classmethod
-    def load(cls):
-        with open('account_pickle', 'rb')as file:
-            cls.__accounts.extend(pickle.load(file))
+    def load(cls) -> dict:
+        """
 
-        
+        :return:
+        """
 
+        with open('database/bank.pickle', 'rb') as file:
+            return pickle.load(file)
 
+    def get_bank_account(self, owner_name: str) -> dict:
+        """
 
+        :param owner_name:
+        :return:
+        """
 
-
-
-
-
-
-
+        accounts_data = type(self).load()
+        return accounts_data[owner_name]
