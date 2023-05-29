@@ -85,3 +85,10 @@ class ShowDoesNotExist(Exception):
     Raised when the show does not exist.
     """
     pass
+
+
+class SuperUserError(Exception):
+    """
+
+    """
+    pass
