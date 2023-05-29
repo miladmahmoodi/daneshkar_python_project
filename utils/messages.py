@@ -83,6 +83,10 @@ class Message:
         'cvv2 or password is wrong.'
     )
 
+    DISCOUNT_ERROR = "\033[91m{}\033[00m".format(
+        'discount value is not acceptable.'
+    )
+
     @staticmethod
     def welcome_user_message(username: str) -> str:
         """
