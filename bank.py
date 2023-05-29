@@ -78,7 +78,7 @@ class Bank(BankAccount):
 
         with open('database/bank.pickle', 'wb') as file:
             pickle.dump(cls.__accounts, file)
-        del cls.__accounts
+        cls.__accounts.clear()
 
     @classmethod
     def load(cls) -> dict:
