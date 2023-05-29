@@ -10,6 +10,7 @@ from uuid import uuid4
 from hashlib import sha256
 from utils.exceptions import *
 from .messages import Message
+from datetime import date, datetime
 
 
 class Utils:
@@ -116,4 +117,12 @@ class Utils:
 
         pattern = r"^[a-zA-Z]{1}[a-zA-Z0-9]{2,}$"
         return bool(re.match(pattern, username))
+
+    @staticmethod
+    def check_birthday(birthday: str):
+        try:
+            bday = datetime.strptime(birthday, '%d/%m/%Y')
+        except ValueError:
+            raise WrongDateValue(Message.WRONG_DATE_VALUE)
+        return bday
 

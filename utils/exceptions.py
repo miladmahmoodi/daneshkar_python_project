@@ -59,3 +59,29 @@ class NotChangeUsername(Exception):
     Raised when the username not changed.
     """
     pass
+
+
+class NoSalonFound(Exception):
+    """
+    Raised when there is no salon with that name
+    """
+    pass
+
+
+class SameSalonFound(Exception):
+    pass
+
+
+class ZeroCapacityError(Exception):
+    pass
+ 
+class WrongDateValue(Exception):
+    """
+    """
+    pass
+
+class ShowDoesNotExist(Exception):
+    """
+    Raised when the show does not exist.
+    """
+    pass
