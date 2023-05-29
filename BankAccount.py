@@ -1,69 +1,94 @@
-from abc import ABC,abstractmethod
+#! usr/bin/python3
 
-class BankAccount:
+from abc import ABC, abstractmethod
+from utils import exceptions
+from utils.messages import Message
+
+
+class BankAccount(ABC):
+    MINIMUM_BALANCE = 10_000
 
     def __init__(self, owner_name: str, cvv2: str, password: str, balance: float) -> None:
         """
-        Initializes a Bank account
-        Args:
-            owner_name (str): The name that has Bank's Account
-            cvv2 (str): The cvv2 of Bank account
-            password (str): the password of bank account
-            balance (float): The initial account balance
+
+        :param owner_name:
+        :param cvv2:
+        :param password:
+        :param balance:
         """
+
         self.owner_name = owner_name
-        self.__balance = balance
+        self._balance = balance
         self.__password = password
         self.cvv2 = cvv2
 
+    @property
+    def balance(self):
+        return self._balance
+
+    @balance.setter
+    def balance(self, balance: float):
+        if balance < self.MINIMUM_BALANCE:
+            raise exceptions.BalanceError(Message.MINIMUM_BALANCE_ERROR)
+        self._balance = balance
+
     def __sub__(self, amount: float) -> None:
         """
-        Subtracts amount from bank account
-        Args:
-            amount (float): The amount to subtract from the bank account
-        """
-        if amount <= 0:
-            raise ValueError("Amount must be greater than zero")
-        if amount <= self.__balance:
-            self.__balance -= amount
-        else:
-            print("Insufficient funds")
 
+        :param amount:
+        :return:
+        """
+
+        self._balance -= amount
 
     def __add__(self, amount: float) -> None:
         """
-        Add amount to the balance account
-        Args:
-            amount (float): The amount to add to the bank account
-        """
-        if amount <= 0:
-            raise ValueError("Amount must be greater than zero")
-        self.__balance += amount
 
+        :param amount:
+        :return:
+        """
+
+        self._balance += amount
 
     @abstractmethod
-    def transfer(self, amount: float, destination_account: str) -> None:
+    def transfer(self, other: 'BankAccount', amount: float) -> None:
         """
-        Transfer an amount to another bank account
-        Args:
-            amount (float): The amount to transfer
-            destination_account (str): The destination account for the transfer
-        """
-        if amount <= 0:
-            raise ValueError("The amount cannot be zero")
-        if self.__balance < amount:
-            raise ValueError("Insufficient funds for transfer")
-        
 
-    def __repr__(self) -> str:
+        :param other:
+        :param amount:
+        :return:
         """
-        Representing the Bank account
-        """
-        return f"The owner of bank account: {self.owner_name}, and Balance: {self.__balance}"
-    
+        pass
 
-    def __str__(self) -> str:
+    @staticmethod
+    def to_rial(amount: float):
         """
-        Representing the bank information
+
+        :param amount:
+        :return:
         """
-        return f"Bank Account Information: Owner Name: {self.owner_name}, Balance: {self.__balance}"
+        return amount * 10
+
+    def __repr__(self):
+        """
+
+        :return:
+        """
+        data = vars(self)
+        data['Rial'] = self.to_rial(self._balance)
+        return str(data)
+
+    def __str__(self):
+        """
+
+        :return:
+        """
+        return f'{self.owner_name}: {self._balance:,} Toman.'
+
+    def __eq__(self, other: 'BankAccount'):
+        """
+
+        :param other:
+        :return:
+        """
+        return self._balance == other._balance
