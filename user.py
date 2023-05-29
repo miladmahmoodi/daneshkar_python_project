@@ -103,7 +103,7 @@ class User:
         :return: None
         """
         json_string = json.dumps(self.__dict__)
-        with open("database/users.json", "a+") as f:
+        with open("database/users.pickle", "a+") as f:
             f.write(json_string)
         return self
 
@@ -130,7 +130,7 @@ class User:
         if not User.exists_user(username):
             raise ExistsUserError(Message.NOT_EXIST_USER_MESSAGE)
 
-        with open("database/users.json", "r") as f:
+        with open("database/users.pickle", "r") as f:
             json_string = f.read()
         user_data = json.loads(json_string)
         return user_data[username]
@@ -143,7 +143,7 @@ class User:
         :param username: A string representing the username to be checked.
         :return: True if the username exists in the profiles list, False otherwise.
         """
-        with open("database/users.json", "r") as f:
+        with open("database/users.pickle", "r") as f:
             json_string = f.read()
         user_data = json.loads(json_string)
 
