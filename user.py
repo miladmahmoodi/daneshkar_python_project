@@ -250,6 +250,17 @@ class User:
         age_years = int(age.days / 365)
         return age_years
 
+    def deposit_wallet(self, amount: float) -> None:
+        """
+        deposit wallet balance amount
+        @param amount: float
+        @return: None
+        """
+        if amount < 0:
+            raise BalanceError(Message.MINIMUM_BALANCE_ERROR)
+
+        self.wallet += amount
+
     def __str__(self) -> str:
         """
         Return the string representation of the User object.
