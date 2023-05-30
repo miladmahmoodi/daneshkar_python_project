@@ -87,6 +87,14 @@ class Message:
         'discount value is not acceptable.'
     )
 
+    AGE_LIMIT_ERROR = "\033[91m{}\033[00m".format(
+        'you are too young!'
+    )
+
+    SALON_FULL_CAPACITY = "\033[91m{}\033[00m".format(
+        'salon capacity is full.'
+    )
+
     @staticmethod
     def welcome_user_message(username: str) -> str:
         """
