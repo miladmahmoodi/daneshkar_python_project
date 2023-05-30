@@ -31,8 +31,8 @@ def main():
     USERNAME = '382132701c4733c3402706cfdd3c8fc7f41f80a88dce5428d145259a41c5f12f'
     PASSWORD = '382132701c4733c3402706cfdd3c8fc7f41f80a88dce5428d145259a41c5f12f'
     superuser = User.create(
-        USERNAME,
-        PASSWORD,
+        'Milad',
+        'Milad22!',
         '1/1/1997',
     )
 
