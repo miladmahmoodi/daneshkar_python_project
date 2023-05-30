@@ -119,10 +119,10 @@ class Utils:
         return bool(re.match(pattern, username))
 
     @staticmethod
-    def check_birthday(birthday: str):
+    def check_date(input_date: str):
         try:
-            bday = datetime.strptime(birthday, '%d/%m/%Y')
-        except ValueError:
+            new_date = datetime.strptime(input_date, '%d/%m/%Y')
+        except WrongDateValue:
             raise WrongDateValue(Message.WRONG_DATE_VALUE)
-        return bday
+        return new_date
 
