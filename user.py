@@ -218,7 +218,7 @@ class User:
         username = cls.check_username(username)
         password = Utils.check_password(password)
         phone_number = Utils.check_phone_number(phone_number)
-        birthday = Utils.check_birthday(birthday)
+        birthday = Utils.check_date(birthday)
 
         cls(
             username,
