@@ -241,6 +241,15 @@ class User:
         type(self).__profiles[self.__username] = profile
         type(self).save()
 
+    def get_age(self) -> int:
+        """
+        calculate age of the user in years
+        @return: integer
+        """
+        age = datetime.now() - self.birthday
+        age_years = int(age.days / 365)
+        return age_years
+
     def __str__(self) -> str:
         """
         Return the string representation of the User object.
