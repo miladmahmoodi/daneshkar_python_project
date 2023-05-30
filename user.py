@@ -10,7 +10,11 @@ from utils.exceptions import *
 from utils.messages import Message
 from datetime import datetime
 from enum import Enum
-import json
+
+
+class Permission(Enum):
+    USER = "user"
+    ADMIN = "admin"
 
 
 class User:
@@ -18,20 +22,22 @@ class User:
     A class used to represent User.
     """
     __profiles = {}
-    movies_list = []
+    movies_list = {}
     __bank_list = {}
     __wallet = 0.0
 
-    class Permission(Enum):
-        admin = 0
-        user = 1
+    SUBSCRIPTION = {
+        "bronze": 0,
+        "silver": 1000,
+        "gold": 2000,
+    }
 
-    class SubscriptionType(Enum):
-        bronze = 0
-        silver = 1
-        gold = 2
-
-    def __init__(self, username: str, password: str, birthday: datetime, phone_number: str | None = None):
+    def __init__(self,
+                 username: str,
+                 password: str,
+                 birthday: datetime,
+                 role: "Permission" = Permission.USER,
+                 phone_number: str | None = None):
 
         self.id = Utils.id_generator()
         self.__username = username
@@ -41,6 +47,8 @@ class User:
         self.wallet = 0.0
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
+        self.role = role
+        self.subscription_type = type(self).SUBSCRIPTION["bronze"]
 
         type(self).__profiles[username] = self
 
@@ -195,7 +203,6 @@ class User:
 
         return self
 
-
     @classmethod
     def create(cls, username: str, password: str, birthday: str, phone_number: str = None) -> None | Exception:
         """
@@ -222,6 +229,17 @@ class User:
 
         if not cls.exists_user(username):
             return NotExistsUserError(Message.SOMETHING_WRONG)
+
+    def subscription_type_change(self, subscription: str):
+        """
+
+        @param subscription:
+        @return:
+        """
+        profile = type(self).get_profile(self.__username)
+        profile.subscription_type = type(self).SUBSCRIPTION[subscription]
+        type(self).__profiles[self.__username] = profile
+        type(self).save()
 
     def __str__(self) -> str:
         """
