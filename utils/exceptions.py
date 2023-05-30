@@ -115,3 +115,17 @@ class DiscountError(Exception):
 
     """
     pass
+
+
+class AgeLimitError(Exception):
+    """
+
+    """
+    pass
+
+
+class SalonFullCapacity(Exception):
+    """
+
+    """
+    pass
