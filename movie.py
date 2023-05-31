@@ -111,13 +111,13 @@ class Movie:
 
     @classmethod
     def save(cls):
-        with open("database/movie.pickle", "wb") as f:
+        with open("../database/movie.pickle", "wb") as f:
             pickle.dump(cls.movie_list, f)
         cls.movie_list.clear()
 
     @classmethod
     def load(cls):
-        with open("database/movie.pickle", "rb") as f:
+        with open("../database/movie.pickle", "rb") as f:
             loaded_movie_list = pickle.load(f)
         return loaded_movie_list
 
