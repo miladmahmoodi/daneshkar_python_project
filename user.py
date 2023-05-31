@@ -132,7 +132,7 @@ class User:
         :return:
         """
 
-        with open('database/users.pickle', 'rb') as file:
+        with open('../database/users.pickle', 'rb') as file:
             return pickle.load(file)
 
     @staticmethod
