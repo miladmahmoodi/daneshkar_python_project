@@ -111,14 +111,17 @@ class Movie:
 
     @classmethod
     def save(cls):
-        with open("../database/movie.pickle", "wb") as f:
+        with open("../database/movie.pickle", "ab") as f:
             pickle.dump(cls.movie_list, f)
         cls.movie_list.clear()
 
     @classmethod
     def load(cls):
-        with open("../database/movie.pickle", "rb") as f:
-            loaded_movie_list = pickle.load(f)
+        try:
+            with open("../database/movie.pickle", "rb") as f:
+                loaded_movie_list = pickle.load(f)
+        except EOFError as err:
+            return dict()
         return loaded_movie_list
 
     def final_price(self, user: "User"):
