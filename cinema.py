@@ -44,11 +44,11 @@ class Cinema:
     def save(cls, name: str, obj: "Cinema" = None) -> None:
         match name:
             case "cinema":
-                with open("../database/cinema.pickle", "wb") as f:
+                with open("../database/cinema.pickle", "ab") as f:
                     pickle.dump(cls.cinema_list, f)
                     cls.cinema_list.clear()
             case "salon":
-                with open("../database/salon.pickle", "wb") as f:
+                with open("../database/salon.pickle", "ab") as f:
                     cinema_salon = dict()
                     cinema_salon[obj.name] = cls.salon_list
                     pickle.dump(cinema_salon, f)
@@ -59,12 +59,17 @@ class Cinema:
     def load(cls, name: str) -> dict:
         match name:
             case "cinema":
-                with open("../database/cinema.pickle", "rb") as f:
-                    data = pickle.load(f)
+                try:
+                    with open("../database/cinema.pickle", "rb") as f:
+                        data = pickle.load(f)
+                except EOFError as err:
+                    return dict()
             case "salon":
-                with open("../database/salon.pickle", "rb") as f:
-                    data = pickle.load(f)
-
+                try:
+                    with open("../database/salon.pickle", "rb") as f:
+                        data = pickle.load(f)
+                except EOFError as err:
+                    return dict()
         return data
 
     def get_salon(self, name: str):

@@ -119,7 +119,7 @@ class User:
         :return: None
         """
         print(cls.__profiles)
-        with open("../database/users.pickle", "wb") as file:
+        with open("../database/users.pickle", "ab") as file:
             pickle.dump(
                 cls.__profiles,
                 file,
