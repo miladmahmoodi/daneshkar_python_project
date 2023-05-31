@@ -118,6 +118,7 @@ class User:
 
         :return: None
         """
+        print(cls.__profiles)
         with open("../database/users.pickle", "wb") as file:
             pickle.dump(
                 cls.__profiles,
@@ -131,9 +132,11 @@ class User:
 
         :return:
         """
-
-        with open('../database/users.pickle', 'rb') as file:
-            return pickle.load(file)
+        try:
+            with open('../database/users.pickle', 'rb') as file:
+                return pickle.load(file)
+        except EOFError as err:
+            return dict()
 
     @staticmethod
     def check_username(username: str) -> str:
